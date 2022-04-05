@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  node1:
+    container_name: "blockhain_node1"
+    build: .
+    ports:
+      - 4000:4000
