@@ -8,6 +8,10 @@ type Block struct {
 	Data []Data `json:"data"`
 }
 
+type Nodes struct {
+	URL string `json:"url"`
+}
+
 type Data struct {
 
 }

@@ -2,6 +2,8 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -10,6 +12,7 @@ import (
 )
 
 var blockhain []model.Block
+var nodes []model.Nodes
 
 type Response struct {
 	TotalItem int `json:"total_item"`
@@ -61,4 +64,32 @@ func ValidateChain(w http.ResponseWriter, r *http.Request) {
 		response = []byte(`{"message": "Blockhain not valid"}`)
 	}
 	w.Write(response)
+}
+
+func ConnectNode(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	var node model.Nodes
+	json.NewDecoder(r.Body).Decode(&node)
+	nodes = append(nodes, node)
+
+	json.NewEncoder(w).Encode([]map[string]string{{"message": "Success"}})
+}
+
+func CheckTheLongestChain(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+
+	
+	for _, node := range nodes {
+		var response Response
+		fmt.Println(node.URL)
+		req, _ := http.Get(node.URL + "/get-block")
+		res, _ := ioutil.ReadAll(req.Body)
+		json.Unmarshal(res, &response)
+
+		if len(response.Block) > len(blockhain) {
+			blockhain = response.Block
+		}
+	}
+
+	json.NewEncoder(w).Encode(blockhain)
 }

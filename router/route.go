@@ -10,5 +10,7 @@ func Router() *mux.Router {
 	r.HandleFunc("/create-block", controller.Mining).Methods("POST")
 	r.HandleFunc("/get-block", controller.GetAllBlock).Methods("GET")
 	r.HandleFunc("/validate-block", controller.ValidateChain).Methods("GET")
+	r.HandleFunc("/add-node", controller.ConnectNode).Methods("POST")
+	r.HandleFunc("/verify-chain", controller.CheckTheLongestChain).Methods("GET")
 	return r
 }
